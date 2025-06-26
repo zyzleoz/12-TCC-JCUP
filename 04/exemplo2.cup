@@ -1,0 +1,62 @@
+import java_cup.runtime.*;
+
+parser code {:
+  public static void main(String[] args) throws Exception {
+    if (args.length == 0) {
+      System.err.println("Uso: java exemplo2 <arquivo_html>");
+      return;
+    }
+    try {
+      exemplo lexer = new exemplo(new java.io.FileReader(args[0]));
+      exemplo2 parser = new exemplo2(lexer);
+      Object result = parser.parse().value;
+      System.out.println("html válido!");
+    } catch (Exception e) {
+      System.err.println("Erro ao analisar html: " + e.getMessage());
+      e.printStackTrace();
+    }
+  }
+
+  // Método para reportar erros de sintaxe
+  public void syntax_error(Symbol cur_token) {
+    System.err.println("Erro de sintaxe na linha " + (cur_token.left + 1) + ", coluna " + (cur_token.right + 1) + ". Token inesperado: '" + cur_token.value + "'");
+  }
+
+  // Método para reportar erros fatais
+  public void report_fatal_error(String message, Object info) {
+    System.err.println("Erro fatal: " + message);
+  }
+:};
+
+// Terminais (tokens do lexer)
+terminal MENORQUE, MAIORQUE, BARRA, H1, H2, IMG, A, IGUAL;
+terminal SRC, HREF;
+terminal String CHAVE, PALAVRA, TEXTO;
+terminal Integer NUMERO;
+
+//regras da gramática
+non terminal html, abretag, conteudo, fechatag, tag, especificacao, atributo;
+
+// Gramática html
+html ::= abretag conteudo fechatag;
+
+abretag ::= MENORQUE tag MAIORQUE
+          | MENORQUE tag
+          | MENORQUE tag especificacao;
+
+fechatag ::= MENORQUE BARRA tag MAIORQUE
+           | BARRA MAIORQUE;
+
+tag ::= H1
+      | H2
+      | IMG
+      | A;
+
+conteudo ::= PALAVRA
+            | TEXTO
+            |  ;
+
+especificacao ::= atributo IGUAL CHAVE;
+
+atributo ::= SRC
+          | HREF;
