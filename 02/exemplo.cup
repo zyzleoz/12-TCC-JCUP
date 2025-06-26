@@ -1,0 +1,58 @@
+import java_cup.runtime.*;
+
+init with {: 
+  System.out.println("Resultado:");
+:}
+
+
+parser code {:
+  //Atributo da classe do analisador sintático:
+  private String nomeDoArquivo;
+
+  // Novo construtor personalizado do analisador sintático:
+  public MeuParser(java_cup.runtime.Scanner meuScanner, String nomeDoArquivo) {
+    super(meuScanner);
+    this.nomeDoArquivo = nomeDoArquivo;
+  }
+
+  public static void main(String[] args) throws Exception {
+    Compilador compilador = new Compilador();
+    compilador.compilar(args[0]);
+  }
+:}
+
+
+action code {:
+  private Integer somar(Integer a, Integer c) {
+    return a.intValue() + c.intValue();
+  }
+
+  private Integer subtrair(Integer a, Integer c) {
+    return a.intValue() - c.intValue();
+  }
+
+  private Integer inverterSinal(Integer a) {
+    return -a;
+  }
+:}
+
+// Terminais
+terminal IF, ELSE, ACOLCH, FCOLCH, APARENT, FPARENT, PTVIRG, IGUAL, MENOR, MAIS_MAIS;
+terminal String ID;
+terminal Integer INTEIRO;
+
+// Não-Terminais
+non terminal String programa, atribuicao, condicao, info;
+
+start with programa;
+
+programa    ::= IF APARENT condicao:a FPARENT atribuicao:b PTVIRG ELSE atribuicao:c PTVIRG
+             {: RESULT = "if (" + a + ") {\n    " + b + ";\n} else {\n    " + c + ";\n}"; System.out.println(RESULT); :};
+
+atribuicao  ::= ID:a IGUAL info:e {: RESULT = "int " + a + " = " + e; :};
+
+condicao    ::= info:e1 MENOR info:e2 {: RESULT = e1 + " < " + e2; :};
+
+info        ::= ID:a {: RESULT = a; :}
+              | INTEIRO:n {: RESULT = n.toString(); :};
+
