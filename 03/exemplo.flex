@@ -23,14 +23,14 @@ inteiro = {digito}+
 
 "do"            { return new Symbol(sym.DO); }
 "out"           { return new Symbol(sym.OUT); }
-"["             { return new Symbol(sym.ACOLCH); }
-"]"             { return new Symbol(sym.FCOLCH); }
-"("             { return new Symbol(sym.APARENT); }
-")"             { return new Symbol(sym.FPARENT); }
-";"             { return new Symbol(sym.PTVIRG); }
+"["             { return new Symbol(sym.ABRECOLCHETE); }
+"]"             { return new Symbol(sym.FECHACOLCHETE); }
+"("             { return new Symbol(sym.ABREPARENTESE); }
+")"             { return new Symbol(sym.FECHAPARENTESE); }
+";"             { return new Symbol(sym.PONTOVIRG); }
 "="             { return new Symbol(sym.IGUAL); }
-"<"             { return new Symbol(sym.MENOR); }
-"++"            { return new Symbol(sym.MM); }
+"<"             { return new Symbol(sym.MENORQUE); }
+"++"            { return new Symbol(sym.INCREMENTO); }
 [a-zA-Z_][a-zA-Z0-9_]* { return new Symbol(sym.ID, yytext()); }
 [0-9]+                { return new Symbol(sym.INTEIRO, Integer.valueOf(yytext())); }
 [ \t\r\n]+            { /* ignora */ }
